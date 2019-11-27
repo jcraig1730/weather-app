@@ -11,14 +11,14 @@ class Forecast extends Component {
     this.state = { city: "", forecastList: [], loading: true };
   }
   componentDidMount() {
-    if (!this.props.zip) {
-      return this.props.history.push("/");
-    }
+    // if (!this.props.zip) {
+    //   return this.props.history.push("/");
+    // }
     const { zip } = this.props;
     axios
       .get(
-        // "http://localhost:3001/test"
-        `http://api.openweathermap.org/data/2.5/forecast?zip=${zip}&APPID=${weatherAPI}&units=imperial`
+        "http://localhost:3001/test"
+        // `http://api.openweathermap.org/data/2.5/forecast?zip=${zip}&APPID=${weatherAPI}&units=imperial`
       )
       .then(data => {
         this.setState({
