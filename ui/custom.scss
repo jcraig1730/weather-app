@@ -1,0 +1,9 @@
+$primary: #5edfff;
+$theme-colors: (
+  "shade1": #ecfcff,
+  "shade2": #b2fcff,
+  "shade3": #5edfff,
+  "shade4": #3e64ff
+);
+
+@import "../node_modules/bootstrap/scss/bootstrap.scss";

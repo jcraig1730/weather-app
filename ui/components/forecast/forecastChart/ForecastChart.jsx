@@ -10,9 +10,11 @@ class ForecastChart extends Component {
   constructor(props) {
     super(props);
     this.state = { loading: true, data: null, dataPoints: [] };
+    this.updateData = this.updateData.bind(this);
   }
 
-  componentDidMount() {
+  updateData() {
+    let i = 0;
     let dataPoints = [];
     const data = this.props.data.map((node, i) => {
       dataPoints.push({
@@ -26,6 +28,17 @@ class ForecastChart extends Component {
     });
     this.setState({ dataPoints });
     this.setState({ data, dataPoints, loading: false });
+  }
+
+  componentDidMount() {
+    this.updateData();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log("***STATE*****");
+    console.log(this.state, prevState);
+    console.log("***PROPS*****");
+    console.log(this.props, prevProps);
   }
 
   render() {
@@ -49,11 +62,13 @@ class ForecastChart extends Component {
           dataPoints: this.state.dataPoints
         }
       ],
-      backgroundColor: "#dff6f0",
+      backgroundColor: "#ecfcff",
       lineColor: "red"
     };
     const chart = this.state.loading ? (
-      "loading"
+      <div class="spinner-border text-shade4" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
     ) : (
       <CanvasJSChart
         options={options}
@@ -61,7 +76,11 @@ class ForecastChart extends Component {
       />
     );
 
-    return <div id="forecast">{chart}</div>;
+    return (
+      <div id="forecast" className="mb-5">
+        {chart}
+      </div>
+    );
   }
 }
 
