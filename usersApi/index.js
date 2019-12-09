@@ -37,6 +37,8 @@ app.get("/api/users/:id", (req, res) => {
 app.put("/api/users/:id", (req, res) => {
   const { id } = req.params;
   const { updatedUserInfo } = req.body;
+  console.log(updatedUserInfo, "hiiiiiiiiii");
+
   db.updateUser(id, updatedUserInfo)
     .then(data => res.json(data))
     .catch(err => res.json(err));

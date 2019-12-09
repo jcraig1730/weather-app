@@ -22,10 +22,11 @@ const findUser = id => {
 };
 
 const updateUser = (id, updatedUserInfo) => {
+  console.log(id, updatedUserInfo);
   return new Promise((resolve, reject) => {
     User.findOneAndUpdate({ id }, updatedUserInfo)
       .then(data => resolve(data))
-      .catch(err => reject(err));
+      .catch(err => reject({ err }));
   });
 };
 

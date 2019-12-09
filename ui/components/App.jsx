@@ -17,19 +17,9 @@ import "./app.css";
 import Axios from "axios";
 
 export default function App() {
-  const {
-    isAuthenticated,
-    loginWithRedirect,
-    logout,
-    user,
-    getTokenSilently,
-    loading
-  } = useAuth0();
-
-  const [{ zip1, userInfo1 }, dispatch] = useStateValue();
-
+  const { isAuthenticated, user, loading } = useAuth0();
+  const [{ userInfo }, dispatch] = useStateValue();
   const [zip, setZip] = useState("");
-  const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
     if (isAuthenticated && user && !loading) {
@@ -79,6 +69,7 @@ export default function App() {
       <Navbar />
       <h1>Weather App</h1>
       {user && <h3>Hello, {user.given_name}</h3>}
+      <Profile />
       <Switch>
         <Route path="/" exact={true}>
           <Landing />
