@@ -1,22 +1,24 @@
 import moment from "moment";
-var React = require("react");
-var Component = React.Component;
+import React, { useState, useEffect } from "react";
 import CanvasJSReact from "./canvas/canvasjs.react.js";
 import "./forecastChart.css";
-var CanvasJS = CanvasJSReact.CanvasJS;
-var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+import { useStateValue } from "../../../state/AppState.jsx";
 
-class ForecastChart extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { loading: true, data: null, dataPoints: [] };
-    this.updateData = this.updateData.bind(this);
-  }
+const CanvasJS = CanvasJSReact.CanvasJS;
+const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-  updateData() {
+function ForecastChart(props) {
+  const [{ zip }, dispatch] = useStateValue();
+  const [state, setState] = useState({
+    data: null,
+    dataPoints: null,
+    loading: true
+  });
+
+  const updateData = () => {
     let i = 0;
     let dataPoints = [];
-    const data = this.props.data.map((node, i) => {
+    const data = props.data.map((node, i) => {
       dataPoints.push({
         y: node.temp,
         label: moment(node.timestamp).format("ddd, hA")
@@ -26,62 +28,52 @@ class ForecastChart extends Component {
         y: node.temp
       };
     });
-    this.setState({ dataPoints });
-    this.setState({ data, dataPoints, loading: false });
-  }
+    setState({ data, dataPoints, loading: false });
+  };
 
-  componentDidMount() {
-    this.updateData();
-  }
+  useEffect(() => {
+    updateData();
+  }, []);
 
-  componentDidUpdate(prevProps, prevState) {
-    console.log("***STATE*****");
-    console.log(this.state, prevState);
-    console.log("***PROPS*****");
-    console.log(this.props, prevProps);
-  }
+  const options = {
+    animationEnabled: true,
+    title: {
+      text: `3 Day Forecast for ${props.city}`
+    },
+    axisY: {
+      title: "Temperature",
+      includeZero: false
+    },
+    toolTip: {
+      shared: true
+    },
+    data: [
+      {
+        type: "spline",
+        name: "Temp",
+        showInLegend: false,
+        dataPoints: state.dataPoints
+      }
+    ],
+    backgroundColor: "#ecfcff",
+    lineColor: "red"
+  };
+  const chart = state.loading ? (
+    <div className="spinner-border text-shade4" role="status">
+      <span className="sr-only">Loading...</span>
+    </div>
+  ) : (
+    <CanvasJSChart
+      options={options}
+      /* onRef={ref => chart = ref} */
+    />
+  );
 
-  render() {
-    const options = {
-      animationEnabled: true,
-      title: {
-        text: `3 Day Forecast for ${this.props.city}`
-      },
-      axisY: {
-        title: "Temperature",
-        includeZero: false
-      },
-      toolTip: {
-        shared: true
-      },
-      data: [
-        {
-          type: "spline",
-          name: "Temp",
-          showInLegend: false,
-          dataPoints: this.state.dataPoints
-        }
-      ],
-      backgroundColor: "#ecfcff",
-      lineColor: "red"
-    };
-    const chart = this.state.loading ? (
-      <div class="spinner-border text-shade4" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-    ) : (
-      <CanvasJSChart
-        options={options}
-        /* onRef={ref => this.chart = ref} */
-      />
-    );
-
-    return (
-      <div id="forecast" className="mb-5">
-        {chart}
-      </div>
-    );
-  }
+  return (
+    <div id="forecast" className="mb-5">
+      {chart}
+    </div>
+  );
 }
 
 export default ForecastChart;

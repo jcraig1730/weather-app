@@ -1,25 +1,11 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import "./forecastDays.css";
+import imageMap from "../../../../imageMap.js";
 
 export default function ForecastDays(props) {
   const [state, setstate] = useState("isLoading");
   const [days, setdays] = useState({});
-
-  const imageMap = {
-    day: {
-      Rain: "09d",
-      Clear: "01d",
-      Clouds: "03d",
-      thunderstorm: "11d"
-    },
-    night: {
-      Rain: "09n",
-      Clear: "01n",
-      Clouds: "03n",
-      thunderstorm: "11d"
-    }
-  };
 
   useEffect(() => {
     for (let i = 0; i < props.data.length; i++) {
@@ -72,16 +58,16 @@ export default function ForecastDays(props) {
           <div
             className="col-12 col-sm-4 col-lg-2"
             style={{ width: "100%", height: "100%" }}
+            key={day}
           >
             <div
               className="card text-shade4 bg-primary mb-3 mr-auto ml-auto"
               style={{
                 maxWidth: "18rem",
-                background: `url(http://openweathermap.org/img/wn/${days[day].icon}@2x.png)`,
+                background: `url(${days[day].icon})`,
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center"
               }}
-              key={day.timestamp}
             >
               <div className="card-header">
                 {moment(day).format("ddd, MMM Do")}

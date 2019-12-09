@@ -1,8 +1,78 @@
 const express = require("express");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 const app = express();
+const path = require("path");
+const fs = require("fs");
 
 app.use(cors());
+app.use(bodyParser.json());
+
+// google geocode response for 76309
+const googleGeoInfo = {
+  results: [
+    {
+      address_components: [
+        {
+          long_name: "76309",
+          short_name: "76309",
+          types: ["postal_code"]
+        },
+        {
+          long_name: "Wichita Falls",
+          short_name: "Wichita Falls",
+          types: ["locality", "political"]
+        },
+        {
+          long_name: "Wichita County",
+          short_name: "Wichita County",
+          types: ["administrative_area_level_2", "political"]
+        },
+        {
+          long_name: "Texas",
+          short_name: "TX",
+          types: ["administrative_area_level_1", "political"]
+        },
+        {
+          long_name: "United States",
+          short_name: "US",
+          types: ["country", "political"]
+        }
+      ],
+      formatted_address: "Wichita Falls, TX 76309, USA",
+      geometry: {
+        bounds: {
+          northeast: {
+            lat: 33.917815,
+            lng: -98.510035
+          },
+          southwest: {
+            lat: 33.8747139,
+            lng: -98.5688309
+          }
+        },
+        location: {
+          lat: 33.8954726,
+          lng: -98.544636
+        },
+        location_type: "APPROXIMATE",
+        viewport: {
+          northeast: {
+            lat: 33.917815,
+            lng: -98.510035
+          },
+          southwest: {
+            lat: 33.8747139,
+            lng: -98.5688309
+          }
+        }
+      },
+      place_id: "ChIJuWg8_6MhU4YRwmeb0Wqukjs",
+      types: ["postal_code"]
+    }
+  ],
+  status: "OK"
+};
 
 const forecastResponse = {
   cod: "200",
@@ -2678,7 +2748,57 @@ const forecastResponse2 = {
   }
 };
 
+const currentResponse = {
+  coord: {
+    lon: -98.53,
+    lat: 33.89
+  },
+  weather: [
+    {
+      id: 800,
+      main: "Clear",
+      description: "clear sky",
+      icon: "01d"
+    }
+  ],
+  base: "stations",
+  main: {
+    temp: 53.58,
+    pressure: 1021,
+    humidity: 35,
+    temp_min: 51.8,
+    temp_max: 55.4
+  },
+  visibility: 16093,
+  wind: {
+    speed: 8.05,
+    deg: 160
+  },
+  clouds: {
+    all: 1
+  },
+  dt: 1575329091,
+  sys: {
+    type: 1,
+    id: 3734,
+    country: "US",
+    sunrise: 1575292923,
+    sunset: 1575329120
+  },
+  timezone: -21600,
+  id: 0,
+  name: "Wichita Falls",
+  cod: 200
+};
+
+app.get("/geo", (req, res) => res.json(googleGeoInfo));
+app.get("/current", (req, res) => res.json(currentResponse));
 app.get("/test", (req, res) => res.json(forecastResponse));
 app.get("/test2", (req, res) => res.json(forecastResponse2));
+app.post("/getdata", (req, res) => {
+  console.log("******************************************");
+  console.log(req.body);
+  fs.writeFileSync(path.resolve(__dirname, "image.png"), req.body.data);
+});
 
 app.listen("3001", () => console.log("api listening on port 3001"));

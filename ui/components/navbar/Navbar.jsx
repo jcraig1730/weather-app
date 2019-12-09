@@ -1,18 +1,23 @@
 import React, { useState } from "react";
 import { withRouter, Link } from "react-router-dom";
+import { useAuth0 } from "../../react-auth0-spa.js";
+import { useStateValue } from "../../state/AppState.jsx";
 
 import "./navbar.css";
 
 function Navbar(props) {
-  const [zip, updatezip] = useState("");
+  const [zipInput, updateZipInput] = useState("");
+  const [{ zip }, dispatch] = useStateValue();
 
-  const handleChange = e => {
-    updatezip(e.target.value);
+  const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
+
+  const handleZipChange = e => {
+    updateZipInput(e.target.value);
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    props.updateZip(zip);
+    dispatch({ type: "SET_ZIP", payload: zipInput });
     props.history.push("/forecast");
   };
 
@@ -36,6 +41,13 @@ function Navbar(props) {
                 Forecast
               </Link>
             </li>
+            {isAuthenticated && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/profile">
+                  Profile
+                </Link>
+              </li>
+            )}
           </ul>
           <form className="form-inline my-2 my-lg-0" onSubmit={handleSubmit}>
             <input
@@ -43,8 +55,8 @@ function Navbar(props) {
               type="search"
               placeholder="Enter a zip"
               aria-label="Search"
-              onChange={handleChange}
-              value={zip}
+              onChange={handleZipChange}
+              value={zipInput}
             />
             <button
               className="btn btn-outline-shade4 my-2 my-sm-0"
@@ -53,6 +65,26 @@ function Navbar(props) {
               Search
             </button>
           </form>
+          <div>
+            {!isAuthenticated && (
+              <button
+                className="btn btn-outline-shade4 my-2 my-sm-0"
+                onClick={() => loginWithRedirect({})}
+              >
+                Log in
+              </button>
+            )}
+
+            {isAuthenticated && (
+              <button
+                className="btn btn-outline-shade4 my-2 my-sm-0"
+                type="submit"
+                onClick={() => logout()}
+              >
+                Log out
+              </button>
+            )}
+          </div>
         </div>
       </nav>
     </div>
