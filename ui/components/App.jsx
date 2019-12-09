@@ -45,8 +45,6 @@ export default function App() {
             .then(data => dispatch({ type: "SET_USER", payload: data.data }))
             .catch(err => console.log(err));
         } else {
-          // setUserInfo(data.data);
-          // console.log("here");
           dispatch({ type: "SET_USER", payload: data.data });
         }
       });
@@ -77,12 +75,10 @@ export default function App() {
   }
 
   return (
-    // <StateProvider initialState={initialState} reducer={reducer}>
     <Router>
       <Navbar />
       <h1>Weather App</h1>
       {user && <h3>Hello, {user.given_name}</h3>}
-      <Profile />
       <Switch>
         <Route path="/" exact={true}>
           <Landing />
@@ -97,6 +93,5 @@ export default function App() {
         <ProtectedRoute path="/profile" component={Profile} />
       </Switch>
     </Router>
-    // </StateProvider>
   );
 }

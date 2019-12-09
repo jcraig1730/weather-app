@@ -30,8 +30,8 @@ export default function Current(props) {
     return () => {};
   }, []);
   return (
-    <div>
-      <div className="container d-flex justify-content-center">
+    <div className="">
+      <div className="container-fluid d-flex px-0">
         <div className="card" style={{ width: "18rem" }}>
           <img
             src={`${imageMap.day[currentWeather.description]}`}
@@ -51,8 +51,10 @@ export default function Current(props) {
             )}
           </div>
         </div>
+        <div>
+          <WeatherMap />
+        </div>
       </div>
-      <WeatherMap />
     </div>
   );
 }
