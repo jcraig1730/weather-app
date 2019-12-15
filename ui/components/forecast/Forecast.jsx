@@ -1,21 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
-import axios from 'axios';
-import LoadingSpinner from '../LoadingSpinner.jsx';
+import React, { useState, useEffect } from "react";
+import { withRouter } from "react-router-dom";
+import axios from "axios";
+import LoadingSpinner from "../LoadingSpinner.jsx";
 
-
-import { useStateValue } from '../../state/AppState.jsx';
-import ForecastDays from './forecastDays/ForecastDays.jsx';
-import ForecastChart from './forecastChart/ForecastChart.jsx';
-import { weatherAPI } from '../../../keys.js';
+import { useStateValue } from "../../state/AppState.jsx";
+import ForecastDays from "./forecastDays/ForecastDays.jsx";
+import ForecastChart from "./forecastChart/ForecastChart.jsx";
 
 function Forecast(props) {
   const [{ zip, userInfo }, dispatch] = useStateValue();
   const [state, setState] = useState({
-    city: '',
+    city: "",
     forecastList: [],
-    isLoading: true,
+    isLoading: true
   });
+  const { WEATHER_API_KEY } = process.env;
 
   const fetchData = () => {
     setState({ isLoading: true });
@@ -24,26 +23,26 @@ function Forecast(props) {
     axios
       .get(
         // "http://localhost:3001/" + test
-        `http://api.openweathermap.org/data/2.5/forecast?zip=${zip}&APPID=${weatherAPI}&units=imperial`,
+        `http://api.openweathermap.org/data/2.5/forecast?zip=${zip}&APPID=${WEATHER_API_KEY}&units=imperial`
       )
-      .then((data) => {
+      .then(data => {
         setState({
           city: data.data.city.name,
-          forecastList: data.data.list.map((node) => ({
+          forecastList: data.data.list.map(node => ({
             timestamp: node.dt_txt,
             temp: node.main.temp,
             humidity: node.main.humidity,
-            description: node.weather[0].main,
+            description: node.weather[0].main
           })),
-          isLoading: false,
+          isLoading: false
         });
       })
-      .catch((err) => console.log(err));
+      .catch(err => console.log(err));
   };
   useEffect(() => {
     (async () => {
       if (!zip && userInfo.home) {
-        await dispatch({ type: 'SET_ZIP', payload: zip });
+        await dispatch({ type: "SET_ZIP", payload: zip });
       }
       fetchData();
     })();
@@ -56,7 +55,7 @@ function Forecast(props) {
           <LoadingSpinner />
         ) : (
           <ForecastChart
-            style={{ width: '75vw' }}
+            style={{ width: "75vw" }}
             data={state.forecastList}
             city={state.city}
           />

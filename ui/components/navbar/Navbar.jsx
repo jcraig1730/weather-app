@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import { withRouter, Link } from 'react-router-dom';
-import { useAuth0 } from '../../react-auth0-spa.js';
-import { useStateValue } from '../../state/AppState.jsx';
+import React, { useState } from "react";
+import { withRouter, Link } from "react-router-dom";
+import { useAuth0 } from "../../react-auth0-spa.js";
+import { useStateValue } from "../../state/AppState.jsx";
 
-import './navbar.css';
-import Axios from 'axios';
+import "./navbar.css";
 
 function Navbar(props) {
-  const [zipInput, updateZipInput] = useState('');
+  const [zipInput, updateZipInput] = useState("");
   const [{ zip }, dispatch] = useStateValue();
 
   const {
@@ -15,17 +14,17 @@ function Navbar(props) {
     loginWithRedirect,
     logout,
     user,
-    getTokenSilently,
+    getTokenSilently
   } = useAuth0();
 
-  const handleZipChange = (e) => {
+  const handleZipChange = e => {
     updateZipInput(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
-    dispatch({ type: 'SET_ZIP', payload: zipInput });
-    props.history.push('/forecast');
+    dispatch({ type: "SET_ZIP", payload: zipInput });
+    props.history.push("/forecast");
   };
 
   return (
@@ -35,16 +34,12 @@ function Navbar(props) {
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
               <Link className="nav-link" to="/">
-                Home
-                {' '}
-                <span className="sr-only">(current)</span>
+                Home <span className="sr-only">(current)</span>
               </Link>
             </li>
             <li className="nav-item active">
               <Link className="nav-link" to="/news">
-                News
-                {' '}
-                <span className="sr-only">(current)</span>
+                News <span className="sr-only">(current)</span>
               </Link>
             </li>
             <li className="nav-item">
